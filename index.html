@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
   <link rel="icon" type="image/x-icon" href="AgendaBookImage.ico">
+  <link rel="icon" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/journal-bookmark-fill.svg" type="image/svg+xml">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agenda Divisi dengan Suara</title>
@@ -34,6 +35,19 @@
     .form-label {
       font-weight: 500;
     }
+    .urgency-select {
+      min-width: 60px;
+      font-size: 0.95rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-right: 6px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      color: #333;
+    }
+    .agenda-title strong {
+      font-weight: bold;
+    }
   </style>
 </head>
 <body class="p-4">
@@ -43,7 +57,10 @@
       <div class="row g-3 mb-4">
         <div class="col-md-6">
           <label for="namaCatatan" class="form-label">Nama Catatan Agenda</label>
-          <input type="text" id="namaCatatan" class="form-control" placeholder="Contoh: Rapat Mingguan" required>
+          <div class="input-group">
+            <input type="text" id="namaCatatan" class="form-control" placeholder="Contoh: Rapat Mingguan" required>
+            <button type="button" class="btn btn-warning btn-sm" id="rekamJudul" title="Isi judul dengan suara">🎤</button>
+          </div>
         </div>
         <div class="col-md-6">
           <label for="tanggalCatatan" class="form-label">Tanggal</label>
@@ -53,17 +70,22 @@
 
       <!-- Agenda Rofii -->
       <div class="agenda-section mb-3" id="rofiiSection">
-        <div class="agenda-title">A. Agenda Saudara Rofii</div>
+        <div class="agenda-title"><strong>A. Agenda Sdr Rofii</strong></div>
         <table class="table table-sm align-middle mb-0" id="agendaTableRofii">
           <tbody>
             <tr>
               <td style="width:5%" class="nomor">1</td>
               <td>
-                <input type="text" class="form-control agenda" placeholder="Tulis atau ucapkan agenda...">
+                <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
               </td>
-              <td style="width:22%">
+              <td>
                 <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
                 <button type="button" class="btn btn-warning btn-sm rekam btn-rekam">🎤 Suara</button>
+                <select class="urgency-select ms-1">
+                  <option value="U">U</option>
+                  <option value="D">D</option>
+                  <option value="S">S</option>
+                </select>
               </td>
             </tr>
           </tbody>
@@ -73,17 +95,22 @@
 
       <!-- Agenda Deva -->
       <div class="agenda-section mb-3" id="devaSection">
-        <div class="agenda-title">B. Agenda Saudara Deva</div>
+        <div class="agenda-title">B. Agenda Sdr Deva</div>
         <table class="table table-sm align-middle mb-0" id="agendaTableDeva">
           <tbody>
             <tr>
               <td style="width:5%" class="nomor">1</td>
               <td>
-                <input type="text" class="form-control agenda" placeholder="Tulis atau ucapkan agenda...">
+                <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
               </td>
-              <td style="width:22%">
+              <td>
                 <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
                 <button type="button" class="btn btn-warning btn-sm rekam btn-rekam">🎤 Suara</button>
+                <select class="urgency-select ms-1">
+                  <option value="U">U</option>
+                  <option value="D">D</option>
+                  <option value="S">S</option>
+                </select>
               </td>
             </tr>
           </tbody>
@@ -93,17 +120,22 @@
 
       <!-- Agenda Okane -->
       <div class="agenda-section mb-3" id="okaneSection">
-        <div class="agenda-title">C. Agenda Saudara Okane</div>
+        <div class="agenda-title">C. Agenda Sdr Okane</div>
         <table class="table table-sm align-middle mb-0" id="agendaTableOkane">
           <tbody>
             <tr>
               <td style="width:5%" class="nomor">1</td>
               <td>
-                <input type="text" class="form-control agenda" placeholder="Tulis atau ucapkan agenda...">
+                <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
               </td>
-              <td style="width:22%">
+              <td>
                 <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
                 <button type="button" class="btn btn-warning btn-sm rekam btn-rekam">🎤 Suara</button>
+                <select class="urgency-select ms-1">
+                  <option value="U">U</option>
+                  <option value="D">D</option>
+                  <option value="S">S</option>
+                </select>
               </td>
             </tr>
           </tbody>
@@ -136,10 +168,17 @@
         let tableSelector = $(this).data("target");
         let newRow = `<tr>
             <td class="nomor"></td>
-            <td><input type="text" class="form-control agenda" placeholder="Tulis atau ucapkan agenda..."></td>
+            <td>
+              <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
+            </td>
             <td>
               <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
               <button type="button" class="btn btn-warning btn-sm rekam btn-rekam">🎤 Suara</button>
+              <select class="urgency-select ms-1">
+                <option value="U">U</option>
+                <option value="D">D</option>
+                <option value="S">S</option>
+              </select>
             </td>
           </tr>`;
         $(tableSelector + " tbody").append(newRow);
@@ -164,33 +203,42 @@
         if (tanggalCatatan) {
           hasil += "Tanggal: " + tanggalCatatan + "\n";
         }
-        hasil += "\nA. Agenda Saudara Rofii:\n";
+        hasil += "\nA. Agenda Sdr Rofii:\n";
         let idx = 1;
         $("#agendaTableRofii tbody tr").each(function() {
           let isi = $(this).find(".agenda").val();
+          let urg = $(this).find(".urgency-select").val();
           if (isi.trim() !== "") {
-            hasil += idx + ". " + isi + "\n";
+            hasil += idx + ". [" + urg + "] " + isi + "\n";
             idx++;
           }
         });
-        hasil += "\nB. Agenda Saudara Deva:\n";
+        hasil += "\nB. Agenda Sdr Deva:\n";
         idx = 1;
         $("#agendaTableDeva tbody tr").each(function() {
           let isi = $(this).find(".agenda").val();
+          let urg = $(this).find(".urgency-select").val();
           if (isi.trim() !== "") {
-            hasil += idx + ". " + isi + "\n";
+            hasil += idx + ". [" + urg + "] " + isi + "\n";
             idx++;
           }
         });
-        hasil += "\nC. Agenda Saudara Okane:\n";
+        hasil += "\nC. Agenda Sdr Okane:\n";
         idx = 1;
         $("#agendaTableOkane tbody tr").each(function() {
           let isi = $(this).find(".agenda").val();
+          let urg = $(this).find(".urgency-select").val();
           if (isi.trim() !== "") {
-            hasil += idx + ". " + isi + "\n";
+            hasil += idx + ". [" + urg + "] " + isi + "\n";
             idx++;
           }
         });
+        // Tambahan keterangan di akhir hasil
+        hasil += "\nJangan lupa laporan di group telegram sebelum pulang kerja.\n";
+        hasil += "\nKode Urgency:\n";
+        hasil += "- U (Sangat Penting)\n";
+        hasil += "- D (Perlu Laporan Segera)\n";
+        hasil += "- S (Santai)\n";
         $("#hasil").val(hasil);
 
         // otomatis copy ke clipboard
@@ -234,6 +282,24 @@
         recognition.start();
       });
 
+      // Rekam suara untuk judul
+      let rekamJudulAktif = false;
+      $("#rekamJudul").click(function() {
+        if (!recognition) return;
+        if (rekamJudulAktif) {
+          recognition.stop();
+          $(this).removeClass("recording").text("🎤");
+          rekamJudulAktif = false;
+          return;
+        }
+        // Reset
+        $(this).addClass("recording").text("⏹");
+        rekamJudulAktif = true;
+        targetInput = $("#namaCatatan");
+        rekamBtn = $(this);
+        recognition.start();
+      });
+
       if (recognition) {
         recognition.onresult = function(event) {
           let hasilSuara = event.results[0][0].transcript;
@@ -244,9 +310,19 @@
 
         recognition.onend = function() {
           $(".rekam.recording").removeClass("recording").text("🎤 Suara");
+          $("#rekamJudul.recording").removeClass("recording").text("🎤");
+          rekamJudulAktif = false;
         };
       }
 
+      // Inisialisasi penomoran awal
+      updateNomor("#agendaTableRofii");
+      updateNomor("#agendaTableDeva");
+      updateNomor("#agendaTableOkane");
+    });
+  </script>
+</body>
+</html>
       // Inisialisasi penomoran awal
       updateNomor("#agendaTableRofii");
       updateNomor("#agendaTableDeva");
