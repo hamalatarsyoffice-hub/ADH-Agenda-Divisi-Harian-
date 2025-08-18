@@ -48,6 +48,64 @@
     .agenda-title strong {
       font-weight: bold;
     }
+    /* Responsive improvements for mobile */
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 !important;
+        max-width: 100vw !important;
+      }
+      .agenda-section {
+        padding: 12px;
+        margin-bottom: 16px;
+      }
+      .agenda-title {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+      .form-label {
+        font-size: 0.98rem;
+      }
+      .urgency-select {
+        min-width: 48px;
+        font-size: 0.92rem;
+        margin-right: 2px;
+        padding: 2px 4px;
+      }
+      .agenda input.form-control.agenda {
+        min-width: 0 !important;
+        width: 100% !important;
+        font-size: 0.98rem;
+      }
+      table.table {
+        font-size: 0.97rem;
+      }
+      #agendaForm .row.g-3 > .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+      #agendaForm .input-group {
+        flex-wrap: nowrap;
+      }
+      #agendaForm .input-group input,
+      #agendaForm .input-group button {
+        font-size: 0.98rem;
+      }
+      /* Make table horizontally scrollable if needed */
+      .agenda-section table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+      }
+      .agenda-section table tbody,
+      .agenda-section table tr {
+        display: table;
+        width: 100%;
+      }
+      .agenda-section table td {
+        white-space: nowrap;
+        vertical-align: middle;
+      }
+    }
   </style>
 </head>
 <body class="p-4">
@@ -76,7 +134,7 @@
             <tr>
               <td style="width:5%" class="nomor">1</td>
               <td>
-                <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
+                <input type="text" class="form-control agenda" style="min-width:420px;max-width:100%;" placeholder="Tulis atau ucapkan agenda...">
               </td>
               <td>
                 <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
@@ -101,7 +159,7 @@
             <tr>
               <td style="width:5%" class="nomor">1</td>
               <td>
-                <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
+                <input type="text" class="form-control agenda" style="min-width:420px;max-width:100%;" placeholder="Tulis atau ucapkan agenda...">
               </td>
               <td>
                 <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
@@ -126,7 +184,7 @@
             <tr>
               <td style="width:5%" class="nomor">1</td>
               <td>
-                <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
+                <input type="text" class="form-control agenda" style="min-width:420px;max-width:100%;" placeholder="Tulis atau ucapkan agenda...">
               </td>
               <td>
                 <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
@@ -169,7 +227,7 @@
         let newRow = `<tr>
             <td class="nomor"></td>
             <td>
-              <input type="text" class="form-control agenda" style="min-width:420px;" placeholder="Tulis atau ucapkan agenda...">
+              <input type="text" class="form-control agenda" style="min-width:420px;max-width:100%;" placeholder="Tulis atau ucapkan agenda...">
             </td>
             <td>
               <button type="button" class="btn btn-danger btn-sm hapus">Hapus</button>
@@ -315,14 +373,6 @@
         };
       }
 
-      // Inisialisasi penomoran awal
-      updateNomor("#agendaTableRofii");
-      updateNomor("#agendaTableDeva");
-      updateNomor("#agendaTableOkane");
-    });
-  </script>
-</body>
-</html>
       // Inisialisasi penomoran awal
       updateNomor("#agendaTableRofii");
       updateNomor("#agendaTableDeva");
