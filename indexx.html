@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Agenda Harian Tim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <style>
+    body { padding: 15px; }
+    textarea { resize: none; }
+    .agenda-box { margin-bottom: 20px; }
+    .card { border-radius: 1rem; }
+    .voice-btn { font-size: 1.2rem; }
+  </style>
+</head>
+<body class="bg-dark text-light">
+  <div class="container">
+    <h3 class="text-center mb-3">Agenda Divisi</h3>
+    <div class="mb-3">
+      <label for="tanggal" class="form-label">Tanggal</label>
+      <input type="date" id="tanggal" class="form-control bg-secondary text-light border-0">
+    </div>
+
+    <!-- Agenda Rofii -->
+    <div class="agenda-box card bg-secondary text-light shadow">
+      <div class="card-body">
+        <h5>Sdr Rofii</h5>
+        <div id="agenda-roffii" class="agenda-items"></div>
+        <button class="btn btn-sm btn-primary add-agenda mt-2" data-target="agenda-roffii">+ Tambah Agenda</button>
+      </div>
+    </div>
+    <!-- Agenda Deva -->
+    <div class="agenda-box card bg-secondary text-light shadow">
+      <div class="card-body">
+        <h5>Sdr Deva</h5>
+        <div id="agenda-deva" class="agenda-items"></div>
+        <button class="btn btn-sm btn-primary add-agenda mt-2" data-target="agenda-deva">+ Tambah Agenda</button>
+      </div>
+    </div>
+    <!-- Agenda Okane -->
+    <div class="agenda-box card bg-secondary text-light shadow">
+      <div class="card-body">
+        <h5>Sdr Okane</h5>
+        <div id="agenda-okane" class="agenda-items"></div>
+        <button class="btn btn-sm btn-primary add-agenda mt-2" data-target="agenda-okane">+ Tambah Agenda</button>
+      </div>
+    </div>
+
+    <div class="mt-4 text-center">
+      <button id="generate" class="btn btn-success">Generate Agenda</button>
+    </div>
+
+    <div class="mt-4">
+      <label for="output" class="form-label">Hasil Agenda:</label>
+      <textarea id="output" class="form-control bg-dark text-light border-light" rows="15"></textarea>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    const codes = ["D","U","B","S"];
+
+    function createAgendaInput() {
+      let select = '<select class="form-select form-select-sm agenda-code bg-dark text-light border-light" style="width:auto;display:inline-block">';
+      codes.forEach(c => {
+        select += <option value="${c}" ${c==="D"?"selected":""}>${c}</option>;
+      });
+      select += '</select>';
+
+      return `
+        <div class="input-group mb-2">
+          <input type="text" class="form-control agenda-text bg-dark text-light border-light" placeholder="Isi agenda...">
+          <button class="btn btn-outline-light voice-btn" type="button">🎤</button>
+          ${select}
+          <button class="btn btn-outline-danger remove-btn" type="button">✖</button>
+        </div>
+      `;
+    }
+
+    // default isi 1 baris
+    $(".agenda-items").each(function() {
+      $(this).append(createAgendaInput());
+    });
+
+    // tambah agenda
+    $(document).on("click", ".add-agenda", function() {
+      const target = $(this).data("target");
+      $("#" + target).append(createAgendaInput());
+    });
+
+    // hapus agenda
+    $(document).on("click", ".remove-btn", function() {
+      $(this).closest(".input-group").remove();
+    });
+
+    // voice input
+    $(document).on("click", ".voice-btn", function() {
+      const input = $(this).siblings(".agenda-text")[0];
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = "id-ID";
+      recognition.start();
+      recognition.onresult = function(e) {
+        input.value = e.results[0][0].transcript;
+      };
+    });
+
+    // generate output
+    $("#generate").click(function() {
+      let date = $("#tanggal").val();
+      let output = *Agenda ${date ? date : ""}*\n\n;
+
+      $("#agenda-list .agenda-box, .container .agenda-box").each(function() {
+        const nama = $(this).find("h5").text();
+        output += *${nama}:*\n;
+        $(this).find(".input-group").each(function() {
+          const text = $(this).find(".agenda-text").val().trim();
+          const code = $(this).find(".agenda-code").val();
+          if(text) {
+            output += - ${text} (${code})\n;
+          }
+        });
+        output += - Agenda lain mengikuti ${nama.split(" ")[1]} (D)\n\n;
+      });
+
+      output += "Jangan lupa laporan ya sebelum pulang di group telegram.";
+      $("#output").val(output);
+    });
+  </script>
+</body>
+</html>
