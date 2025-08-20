@@ -250,49 +250,62 @@
         updateNomor("#" + table.attr("id"));
       });
 
+      // Capitalize first letter of each sentence (for agenda), and each word (for title)
+      function capitalizeSentence(str) {
+        if (!str) return "";
+        // Split by . or \n or ? or ! for sentences, but for agenda, just capitalize first char
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+      function capitalizeWords(str) {
+        if (!str) return "";
+        return str.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+      }
+
       // Gabungkan hasil sesuai format
       $("#gabungkan").click(function() {
         let namaCatatan = $("#namaCatatan").val().trim();
         let tanggalCatatan = $("#tanggalCatatan").val();
         let hasil = "";
         if (namaCatatan) {
-          hasil += namaCatatan + "\n";
+          hasil += "*" + capitalizeWords(namaCatatan) + "*\n";
         }
         if (tanggalCatatan) {
-          hasil += "Tanggal: " + formatTanggalIndo(tanggalCatatan) + "\n";
+          hasil += "Tanggal: *" + formatTanggalIndo(tanggalCatatan) + "*\n";
         }
-        hasil += "\nA. Agenda Sdr Rofii:\n";
+        hasil += "\n*A. Agenda Sdr Rofii:*\n";
         let idx = 1;
         $("#agendaTableRofii tbody tr").each(function() {
           let isi = $(this).find(".agenda").val();
           let urg = $(this).find(".urgency-select").val();
           if (isi.trim() !== "") {
-            hasil += idx + ". [" + urg + "] " + isi + "\n";
+            hasil += idx + ". *[" + urg + "]* " + capitalizeSentence(isi.trim()) + "\n";
             idx++;
           }
         });
-        hasil += "\nB. Agenda Sdr Deva:\n";
+        hasil += "\n*B. Agenda Sdr Deva:*\n";
         idx = 1;
         $("#agendaTableDeva tbody tr").each(function() {
           let isi = $(this).find(".agenda").val();
           let urg = $(this).find(".urgency-select").val();
           if (isi.trim() !== "") {
-            hasil += idx + ". [" + urg + "] " + isi + "\n";
+            hasil += idx + ". *[" + urg + "]* " + capitalizeSentence(isi.trim()) + "\n";
             idx++;
           }
         });
-        hasil += "\nC. Agenda Sdr Okane:\n";
+        hasil += "\n*C. Agenda Sdr Okane:*\n";
         idx = 1;
         $("#agendaTableOkane tbody tr").each(function() {
           let isi = $(this).find(".agenda").val();
           let urg = $(this).find(".urgency-select").val();
           if (isi.trim() !== "") {
-            hasil += idx + ". [" + urg + "] " + isi + "\n";
+            hasil += idx + ". *[" + urg + "]* " + capitalizeSentence(isi.trim()) + "\n";
             idx++;
           }
         });
         // Tambahan keterangan di akhir hasil
-        hasil += "\nJangan lupa laporan di group telegram sebelum pulang kerja.\n";
+        hasil += "\n*Jangan lupa laporan di group telegram sebelum pulang kerja.*\n";
         hasil += "\nKode Urgency:\n";
         hasil += "- U (Sangat Penting)\n";
         hasil += "- D (Perlu Laporan Segera)\n";
@@ -316,6 +329,27 @@
         if (arr.length !== 3) return tgl;
         return arr[2] + " " + bulan[parseInt(arr[1], 10) - 1] + " " + arr[0];
       }
+
+      // --- Capitalize agenda input on blur/change and after speech-to-text ---
+      function capitalizeAgendaInput($input) {
+        let val = $input.val();
+        if (val) {
+          $input.val(capitalizeSentence(val.trim()));
+        }
+      }
+      function capitalizeTitleInput($input) {
+        let val = $input.val();
+        if (val) {
+          $input.val(capitalizeWords(val.trim()));
+        }
+      }
+
+      $(document).on("blur change", ".agenda", function() {
+        capitalizeAgendaInput($(this));
+      });
+      $("#namaCatatan").on("blur change", function() {
+        capitalizeTitleInput($(this));
+      });
 
       // Rekam suara (Speech-to-Text)
       let recognition;
@@ -373,8 +407,12 @@
       if (recognition) {
         recognition.onresult = function(event) {
           let hasilSuara = event.results[0][0].transcript;
-          if (targetInput) {
+          if (targetInput && targetInput.is("#namaCatatan")) {
             targetInput.val(targetInput.val() + (targetInput.val() ? " " : "") + hasilSuara);
+            capitalizeTitleInput(targetInput);
+          } else if (targetInput) {
+            targetInput.val(targetInput.val() + (targetInput.val() ? " " : "") + hasilSuara);
+            capitalizeAgendaInput(targetInput);
           }
         };
 
